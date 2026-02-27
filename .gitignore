@@ -1,0 +1,35 @@
+# Environment
+.env
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+
+# Recordings
+recordings/
+!recordings/.gitkeep
+
+# Logs
+logs/
+!logs/.gitkeep
+
+# Virtual environment
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Credentials
+*credentials*
+*config.json
