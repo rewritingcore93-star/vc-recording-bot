@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  vc-recorder-bot:
+    build: .
+    container_name: vc-recording-bot
+    restart: unless-stopped
+    environment:
+      - TZ=UTC
+    env_file:
+      - .env
+    volumes:
+      - ./recordings:/app/recordings
+      - ./logs:/app/logs
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
