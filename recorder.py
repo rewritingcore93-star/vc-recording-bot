@@ -1,0 +1,51 @@
+import asyncio
+import datetime
+from pathlib import Path
+from typing import Dict, Set
+import numpy as np
+
+class RecordingSession:
+    def __init__(self, chat_id: int, chat_title: str, recordings_dir: Path):
+        self.chat_id = chat_id
+        self.chat_title = chat_title
+        self.recordings_dir = recordings_dir / str(chat_id)
+        self.recordings_dir.mkdir(parents=True, exist_ok=True)
+        
+        self.is_recording = False
+        self.participants_speaking: Set[int] = set()
+        self.current_file = None
+        self.start_time = None
+        self.part_number = 0
+        
+    def start(self):
+        """Start recording session"""
+        self.is_recording = True
+        self.start_time = datetime.datetime.now()
+        self.part_number += 1
+        self.current_file = self._get_filename()
+        
+    def stop(self):
+        """Stop recording session"""
+        self.is_recording = False
+        self.participants_speaking.clear()
+        
+    def _get_filename(self):
+        timestamp = self.start_time.strftime("%Y%m%d_%H%M%S")
+        return self.recordings_dir / f"recording_{timestamp}_part{self.part_number}.ogg"
+
+class RecordingManager:
+    def __init__(self):
+        self.sessions: Dict[int, RecordingSession] = {}
+        
+    def get_session(self, chat_id: int, chat_title: str = "Unknown"):
+        if chat_id not in self.sessions:
+            self.sessions[chat_id] = RecordingSession(
+                chat_id, 
+                chat_title,
+                Path("recordings")
+            )
+        return self.sessions[chat_id]
+    
+    def remove_session(self, chat_id: int):
+        if chat_id in self.sessions:
+            del self.sessions[chat_id]
